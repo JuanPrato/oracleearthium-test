@@ -19,3 +19,22 @@ export const points = mysqlTable(
     };
   }
 );
+
+export const channels = mysqlTable(
+  "channels",
+  {
+    guild: varchar("guild", { length: 20 }),
+    channel: varchar("channel", { length: 20 }),
+    symbol: varchar("symbol", { length: 10 }).references(() => symbol.symbol),
+  },
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.guild, table.channel] }),
+    };
+  }
+);
+
+export const symbol = mysqlTable("symbols", {
+  symbol: varchar("symbol", { length: 10 }).primaryKey(),
+  value: varchar("value", { length: 30 }).notNull(),
+});
