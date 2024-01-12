@@ -1,8 +1,7 @@
 import dotenv from "dotenv";
 import { exit } from "node:process";
-import { app, client, connection } from "./app";
+import { app, client } from "./app";
 import { loadSlashCommands } from "./utils/loaders.util";
-import { drizzle } from "drizzle-orm/planetscale-serverless";
 import express from "express";
 
 dotenv.config();
@@ -19,8 +18,6 @@ client
     console.log(e);
     exit(1);
   });
-
-export const db = drizzle(connection);
 
 app.use("/", express.static(__dirname + "/public"));
 

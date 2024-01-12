@@ -13,6 +13,8 @@ export const startRefreshValueTimer = async () => {
     for (const newPrice of newPrices) {
       prices.set(newPrice.symbol, newPrice.price);
     }
+
+    await updateChannelsValues();
   }, 10 * 60 * 1000);
 };
 

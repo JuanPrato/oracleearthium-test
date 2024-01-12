@@ -4,7 +4,6 @@ import path from "node:path";
 
 import type { Client } from "discord.js";
 import { prices } from "../caches/price.cache";
-import { db } from "..";
 import {
   channels as channelTable,
   configs as configTable,
@@ -12,6 +11,7 @@ import {
 } from "../db/schema";
 import { configMap } from "../caches/config.cache";
 import { priceChannels } from "../caches/price_channel.cache";
+import { db } from "../app";
 
 const EVENTS_DIR = "../events/";
 const COMMANDS_DIR = "../commands/";

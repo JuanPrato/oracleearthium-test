@@ -12,6 +12,7 @@ import {
   startRefreshValueTimer,
   updateChannelsValues,
 } from "./utils/timers.util";
+import { drizzle } from "drizzle-orm/planetscale-serverless";
 
 export const client = new Client({
   intents: [
@@ -38,8 +39,9 @@ loadCommands().catch((e) => {
 
 export const app = express();
 
+export const db = drizzle(connection);
+
 loadRoutes();
 loadCaches().then(async () => {
-  await startRefreshValueTimer();
-  await updateChannelsValues();
+  startRefreshValueTimer();
 });
