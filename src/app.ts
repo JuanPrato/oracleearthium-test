@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits } from "discord.js";
-import { loadCommands, loadEvents } from "./utils/loaders.util";
+import { loadCommands, loadEvents, loadRoutes } from "./utils/loaders.util";
 import { exit } from "process";
 import { connect } from "@planetscale/database";
 import express from "express";
@@ -28,3 +28,5 @@ loadCommands().catch((e) => {
 });
 
 export const app = express();
+
+loadRoutes();

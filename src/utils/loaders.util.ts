@@ -6,6 +6,7 @@ import type { Client } from "discord.js";
 
 const EVENTS_DIR = "../events/";
 const COMMANDS_DIR = "../commands/";
+const ROUTES_DIR = "../routes/";
 
 export const loadEvents = (): void => {
   const files = readdirSync(path.join(__dirname, EVENTS_DIR));
@@ -31,5 +32,14 @@ export const loadSlashCommands = async (client: Client) => {
     for (const [commandName, command] of commands) {
       await guild.commands.create(command.slashCommand);
     }
+  }
+};
+
+export const loadRoutes = async () => {
+  const files = readdirSync(path.join(__dirname, ROUTES_DIR));
+
+  for (const file of files) {
+    import(path.join(__dirname, ROUTES_DIR, file));
+    console.log(file, "loaded");
   }
 };

@@ -22,4 +22,8 @@ client
 
 export const db = drizzle(connection);
 
-app.listen(3000);
+app.use("/", express.static(__dirname + "/public"));
+
+app.listen(3000, () => {
+  console.log("Express ready on port: " + 3000);
+});
