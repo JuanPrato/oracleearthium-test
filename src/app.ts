@@ -1,8 +1,17 @@
 import { Client, GatewayIntentBits } from "discord.js";
-import { loadCommands, loadEvents, loadRoutes } from "./utils/loaders.util";
+import {
+  loadCaches,
+  loadCommands,
+  loadEvents,
+  loadRoutes,
+} from "./utils/loaders.util";
 import { exit } from "process";
 import { connect } from "@planetscale/database";
 import express from "express";
+import {
+  startRefreshValueTimer,
+  updateChannelsValues,
+} from "./utils/timers.util";
 
 export const client = new Client({
   intents: [
@@ -30,3 +39,7 @@ loadCommands().catch((e) => {
 export const app = express();
 
 loadRoutes();
+loadCaches().then(async () => {
+  await startRefreshValueTimer();
+  await updateChannelsValues();
+});

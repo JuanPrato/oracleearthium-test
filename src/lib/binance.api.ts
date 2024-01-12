@@ -1,5 +1,5 @@
 import { Spot } from "@binance/connector-typescript";
-import { convertSymbol } from "../utils/binance.util";
+import { convertSymbol, parseSymbolResponse } from "../utils/binance.util";
 
 const API_KEY = "";
 const API_SECRET = "";
@@ -16,6 +16,9 @@ export async function getPriceForSymbols(symbols: string[]) {
   const parsedSymbols = symbols.map(convertSymbol);
   const res = (await client.symbolPriceTicker({
     symbols: `["${parsedSymbols.join('","')}"]`,
-  })) as unknown as Promise<SymbolPrice[]>;
-  return res;
+  })) as unknown as SymbolPrice[];
+  return res.map((v) => ({
+    symbol: parseSymbolResponse(v.symbol),
+    price: v.price,
+  }));
 }

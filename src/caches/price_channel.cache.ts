@@ -1,6 +1,6 @@
 import { NonThreadGuildBasedChannel } from "discord.js";
 
-type ChannelConfig = {
+export type ChannelConfig = {
   channelId: string;
   symbol: string;
 };
