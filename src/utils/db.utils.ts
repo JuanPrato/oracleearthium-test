@@ -1,8 +1,9 @@
 import { and, eq } from "drizzle-orm";
-import { channels, symbols } from "../db/schema";
+import { channels, configs, symbols } from "../db/schema";
 import { db } from "../app";
 import { prices } from "../caches/price.cache";
 import { count } from "drizzle-orm";
+import { Config } from "../caches/config.cache";
 
 export async function removeGuild(guild: string) {
   return db.delete(channels).where(eq(channels.guild, guild));
@@ -42,4 +43,18 @@ export async function saveNewChannel(
     guild,
     symbol,
   });
+}
+
+export async function saveOrUpdateConfig(guild: string, config: Config) {
+  await db
+    .insert(configs)
+    .values({
+      id: guild,
+      adminRole: config.adminRoleId,
+    })
+    .onDuplicateKeyUpdate({
+      set: {
+        adminRole: config.adminRoleId,
+      },
+    });
 }

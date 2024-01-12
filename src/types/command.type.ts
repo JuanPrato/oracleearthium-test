@@ -3,6 +3,7 @@ import {
   GuildMember,
   MessageReplyOptions,
   Message,
+  CommandInteractionOption,
 } from "discord.js";
 
 export type Run<T = string[]> = (
@@ -16,7 +17,7 @@ export type ICommand<T = string[]> = {
   command: string;
   run: Run<T>;
   slashCommand: any;
-  slashArgsParser: (_: any) => T;
+  slashArgsParser: (args: readonly CommandInteractionOption[]) => T;
 };
 
 export interface ICommandException {

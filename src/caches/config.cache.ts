@@ -1,4 +1,4 @@
-type Config = {
+export type Config = {
   adminRoleId: string | null;
   updateTime: number;
 };
