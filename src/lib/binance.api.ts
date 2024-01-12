@@ -14,7 +14,6 @@ type SymbolPrice = {
 
 export async function getPriceForSymbols(symbols: string[]) {
   const parsedSymbols = symbols.map(convertSymbol);
-  console.log(parsedSymbols);
   const res = (await client.symbolPriceTicker({
     symbols: `["${parsedSymbols.join('","')}"]`,
   })) as unknown as SymbolPrice[];

@@ -1,8 +1,12 @@
 import { client } from "../app";
 import { prices } from "../caches/price.cache";
-import { priceChannels } from "../caches/price_channel.cache";
+import { ChannelConfig, priceChannels } from "../caches/price_channel.cache";
 import { getPriceForSymbols } from "../lib/binance.api";
-import { removeChannel, removeGuild } from "./db.utils";
+import {
+  checkAndDeleteUnusedSymbol,
+  removeChannel,
+  removeGuild,
+} from "./db.utils";
 
 export const startRefreshValueTimer = async () => {
   await setNewPriceValues();
@@ -37,13 +41,13 @@ export const updateChannelsValues = async () => {
 
     await guild.channels.fetch();
 
-    const toDelete: string[] = [];
+    const toDelete: ChannelConfig[] = [];
 
     for (const channelConfig of channels) {
       const channel = guild.channels.cache.get(channelConfig.channelId);
 
       if (!channel) {
-        toDelete.push(channelConfig.channelId);
+        toDelete.push(channelConfig);
         continue;
       }
       const price = prices.get(channelConfig.symbol);
@@ -53,13 +57,18 @@ export const updateChannelsValues = async () => {
       );
     }
 
-    for (const channel of toDelete) {
-      await removeChannel(guildId, channel);
+    for (const { channelId } of toDelete) {
+      await removeChannel(guildId, channelId);
+    }
+    for (const { symbol } of toDelete) {
+      await checkAndDeleteUnusedSymbol(symbol);
     }
 
     priceChannels.set(
       guildId,
-      channels.filter((c) => !toDelete.includes(c.channelId))
+      channels.filter(
+        (c) => !toDelete.some((td) => td.channelId === c.channelId)
+      )
     );
   }
 };
