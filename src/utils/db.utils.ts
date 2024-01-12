@@ -1,6 +1,7 @@
 import { and, eq } from "drizzle-orm";
-import { channels } from "../db/schema";
+import { channels, symbols } from "../db/schema";
 import { db } from "../app";
+import { prices } from "../caches/price.cache";
 
 export async function removeGuild(guild: string) {
   return db.delete(channels).where(eq(channels.guild, guild));
@@ -15,9 +16,16 @@ export async function removeChannel(guildId: string, channelId: string) {
 export async function saveNewChannel(
   channel: string,
   guild: string,
-  symbol: string
+  symbol: string,
+  price: string
 ) {
-  db.insert(channels).values({
+  if (!prices.has(symbol)) {
+    await db.insert(symbols).values({
+      symbol,
+      value: price,
+    });
+  }
+  return db.insert(channels).values({
     channel,
     guild,
     symbol,

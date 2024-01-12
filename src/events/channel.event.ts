@@ -28,10 +28,10 @@ client.on(Events.ChannelCreate, async (channel) => {
 
     channel.setName(`${crypto}: ${Number(price).toFixed(2)} U$D`);
 
-    prices.set(crypto, price);
-
     setNewChannel(channel, crypto);
-    await saveNewChannel(channel.id, channel.guildId, crypto);
+    await saveNewChannel(channel.id, channel.guildId, crypto, price);
+
+    prices.set(crypto, price);
   } catch (e) {
     console.error(e);
   }

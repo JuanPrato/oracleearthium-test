@@ -1,6 +1,6 @@
 import { client } from "../app";
 import { prices } from "../caches/price.cache";
-import { ChannelConfig, priceChannels } from "../caches/price_channel.cache";
+import { priceChannels } from "../caches/price_channel.cache";
 import { getPriceForSymbols } from "../lib/binance.api";
 import { removeChannel, removeGuild } from "./db.utils";
 
@@ -48,7 +48,9 @@ export const updateChannelsValues = async () => {
       }
       const price = prices.get(channelConfig.symbol);
 
-      channel.setName(`${crypto}: ${Number(price).toFixed(2)} U$D`);
+      channel.setName(
+        `${channelConfig.symbol}: ${Number(price).toFixed(2)} U$D`
+      );
     }
 
     for (const channel of toDelete) {

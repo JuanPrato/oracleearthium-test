@@ -54,7 +54,7 @@ export const loadRoutes = async () => {
 };
 
 export const loadCaches = async () => {
-  const symbols = await db.select().from(symbolTable).execute();
+  const symbols = await db.select().from(symbolTable);
 
   for (const symbol of symbols) {
     prices.set(symbol.symbol, symbol.value);
