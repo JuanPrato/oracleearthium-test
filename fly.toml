@@ -1,9 +1,0 @@
-# fly.toml app configuration file generated for horus-sports on 2023-11-08T00:02:48-03:00
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
-app = "horus-sports"
-primary_region = "mad"
-
-[build]
