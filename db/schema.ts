@@ -9,8 +9,8 @@ export const configs = mysqlTable("configurations", {
 export const points = mysqlTable(
   "points",
   {
-    guild: varchar("guild", { length: 20 }).primaryKey(),
-    user: varchar("user", { length: 20 }).primaryKey(),
+    guild: varchar("guild", { length: 20 }),
+    user: varchar("user", { length: 20 }),
     points: int("points").notNull().default(0),
   },
   (table) => {
@@ -25,7 +25,7 @@ export const channels = mysqlTable(
   {
     guild: varchar("guild", { length: 20 }),
     channel: varchar("channel", { length: 20 }),
-    symbol: varchar("symbol", { length: 10 }).references(() => symbol.symbol),
+    symbol: varchar("symbol", { length: 10 }),
   },
   (table) => {
     return {
