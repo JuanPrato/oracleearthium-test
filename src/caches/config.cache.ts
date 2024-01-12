@@ -1,5 +1,5 @@
 type Config = {
-  adminRoleId: string;
+  adminRoleId: string | null;
   updateTime: number;
 };
 

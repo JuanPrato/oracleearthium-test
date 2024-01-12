@@ -2,7 +2,7 @@ import { AuditLogEvent, Events } from "discord.js";
 import { client } from "../app";
 import { getPriceForSymbols } from "../lib/binance.api";
 import { prices } from "../caches/price.cache";
-import { channels, setNewChannel } from "../caches/price_channel.cache";
+import { priceChannels, setNewChannel } from "../caches/price_channel.cache";
 
 client.on(Events.ChannelCreate, async (channel) => {
   if (!channel.guild || !channel.isVoiceBased()) return;
