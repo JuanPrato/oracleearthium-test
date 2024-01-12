@@ -3,6 +3,7 @@ import { client } from "../app";
 import { getPriceForSymbols } from "../lib/binance.api";
 import { prices } from "../caches/price.cache";
 import { priceChannels, setNewChannel } from "../caches/price_channel.cache";
+import { saveNewChannel } from "../utils/db.utils";
 
 client.on(Events.ChannelCreate, async (channel) => {
   if (!channel.guild || !channel.isVoiceBased()) return;
@@ -30,6 +31,7 @@ client.on(Events.ChannelCreate, async (channel) => {
     prices.set(crypto, price);
 
     setNewChannel(channel, crypto);
+    await saveNewChannel(channel.id, channel.guildId, crypto);
   } catch (e) {
     console.error(e);
   }

@@ -11,3 +11,15 @@ export async function removeChannel(guildId: string, channelId: string) {
     .delete(channels)
     .where(and(eq(channels.guild, guildId), eq(channels.channel, channelId)));
 }
+
+export async function saveNewChannel(
+  channel: string,
+  guild: string,
+  symbol: string
+) {
+  db.insert(channels).values({
+    channel,
+    guild,
+    symbol,
+  });
+}

@@ -7,7 +7,7 @@ import { prices } from "../caches/price.cache";
 import {
   channels as channelTable,
   configs as configTable,
-  symbol,
+  symbols as symbolTable,
 } from "../db/schema";
 import { configMap } from "../caches/config.cache";
 import { priceChannels } from "../caches/price_channel.cache";
@@ -54,7 +54,7 @@ export const loadRoutes = async () => {
 };
 
 export const loadCaches = async () => {
-  const symbols = await db.select().from(symbol);
+  const symbols = await db.select().from(symbolTable).execute();
 
   for (const symbol of symbols) {
     prices.set(symbol.symbol, symbol.value);

@@ -34,7 +34,7 @@ export const channels = mysqlTable(
   }
 );
 
-export const symbol = mysqlTable("symbols", {
+export const symbols = mysqlTable("symbols", {
   symbol: varchar("symbol", { length: 10 }).primaryKey(),
   value: varchar("value", { length: 30 }).notNull(),
 });

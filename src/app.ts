@@ -6,14 +6,10 @@ import {
   loadRoutes,
 } from "./utils/loaders.util";
 import { exit } from "process";
-import { connect } from "@planetscale/database";
 import express from "express";
-import {
-  startRefreshValueTimer,
-  updateChannelsValues,
-} from "./utils/timers.util";
-import { drizzle } from "drizzle-orm/planetscale-serverless";
-import { connection } from ".";
+import { startRefreshValueTimer } from "./utils/timers.util";
+import { MySql2Database, drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise";
 
 export const client = new Client({
   intents: [
@@ -34,9 +30,27 @@ loadCommands().catch((e) => {
 
 export const app = express();
 
-export const db = drizzle(connection);
+export let db: MySql2Database;
+
+mysql
+  .createConnection({
+    uri: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  })
+  .then((con) => {
+    db = drizzle(con);
+  })
+  .then(() => {
+    loadCaches()
+      .then(async () => {
+        startRefreshValueTimer();
+      })
+      .catch((e) => {
+        console.log(e);
+        exit(3);
+      });
+  });
 
 loadRoutes();
-loadCaches().then(async () => {
-  startRefreshValueTimer();
-});

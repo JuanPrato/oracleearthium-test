@@ -5,18 +5,23 @@ import { getPriceForSymbols } from "../lib/binance.api";
 import { removeChannel, removeGuild } from "./db.utils";
 
 export const startRefreshValueTimer = async () => {
+  await setNewPriceValues();
+  await updateChannelsValues();
   setTimeout(async () => {
-    const trackedSymbols = Array.from(prices.keys());
-
-    const newPrices = await getPriceForSymbols(trackedSymbols);
-
-    for (const newPrice of newPrices) {
-      prices.set(newPrice.symbol, newPrice.price);
-    }
-
+    await setNewPriceValues();
     await updateChannelsValues();
   }, 10 * 60 * 1000);
 };
+
+async function setNewPriceValues() {
+  const trackedSymbols = Array.from(prices.keys());
+  if (trackedSymbols.length === 0) return;
+  const newPrices = await getPriceForSymbols(trackedSymbols);
+
+  for (const newPrice of newPrices) {
+    prices.set(newPrice.symbol, newPrice.price);
+  }
+}
 
 export const updateChannelsValues = async () => {
   await client.guilds.fetch();
