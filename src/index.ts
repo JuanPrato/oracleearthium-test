@@ -3,6 +3,7 @@ import { exit } from "node:process";
 import { app, client } from "./app";
 import { loadSlashCommands } from "./utils/loaders.util";
 import express from "express";
+import { connect } from "@planetscale/database";
 
 dotenv.config();
 
@@ -18,6 +19,10 @@ client
     console.log(e);
     exit(1);
   });
+
+export const connection = connect({
+  url: process.env.DATABASE_URL,
+});
 
 app.use("/", express.static(__dirname + "/public"));
 

@@ -13,6 +13,7 @@ import {
   updateChannelsValues,
 } from "./utils/timers.util";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
+import { connection } from ".";
 
 export const client = new Client({
   intents: [
@@ -23,12 +24,6 @@ export const client = new Client({
     GatewayIntentBits.GuildIntegrations,
     GatewayIntentBits.GuildModeration,
   ],
-});
-
-export const connection = connect({
-  host: process.env.DATABASE_HOST,
-  username: process.env.DATABASE_USERNAME,
-  password: process.env.DATABASE_PASSWORD,
 });
 
 loadEvents();
