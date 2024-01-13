@@ -8,20 +8,6 @@ export const configs = mysqlTable("configurations", {
   adminRole: varchar("adminRole", { length: 20 }),
 });
 
-export const points = mysqlTable(
-  "points",
-  {
-    guild: varchar("guild", { length: 20 }),
-    user: varchar("user", { length: 20 }),
-    points: int("points").notNull().default(0),
-  },
-  (table) => {
-    return {
-      pk: primaryKey({ columns: [table.guild, table.user] }),
-    };
-  }
-);
-
 export const channels = mysqlTable(
   "channels",
   {
@@ -47,4 +33,6 @@ export const bets = mysqlTable("bets", {
   userId: varchar("userId", { length: 20 }).notNull(),
   betAmount: float("bet_amount").notNull(),
   date: timestamp("date").defaultNow(),
+  symbol: varchar("symbol", { length: 10 }).notNull(),
+  points: int("points").notNull().default(0),
 });

@@ -4,9 +4,11 @@ import { ChannelConfig, priceChannels } from "../caches/price_channel.cache";
 import { getPriceForSymbols } from "../lib/binance.api";
 import {
   checkAndDeleteUnusedSymbol,
+  getBetsGroupBySymbol,
   removeChannel,
   removeGuild,
 } from "./db.utils";
+import { CronJob } from "cron";
 
 export const startRefreshValueTimer = async () => {
   await setNewPriceValues();
@@ -72,3 +74,24 @@ export const updateChannelsValues = async () => {
     );
   }
 };
+
+export function setBetScheduler() {
+  new CronJob("0 1 0 * * *", async function () {
+    const allBets = await getBetsGroupBySymbol();
+
+    for (const [guild, guildBets] of allBets) {
+      for (const [symbol, bets] of guildBets) {
+        const results = bets
+          .map((bet) => {
+            return {
+              user: bet.user,
+              diff: Math.abs(Number(prices.get(symbol)) - bets[0].bet),
+            };
+          })
+          .sort((f, s) => f.diff - s.diff);
+
+        const [first, second, third, ..._] = results;
+      }
+    }
+  });
+}

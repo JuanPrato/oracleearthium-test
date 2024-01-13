@@ -7,7 +7,7 @@ import {
 } from "./utils/loaders.util";
 import { exit } from "process";
 import express from "express";
-import { startRefreshValueTimer } from "./utils/timers.util";
+import { setBetScheduler, startRefreshValueTimer } from "./utils/timers.util";
 import { MySql2Database, drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 
@@ -54,3 +54,5 @@ mysql
   });
 
 loadRoutes();
+
+setBetScheduler();

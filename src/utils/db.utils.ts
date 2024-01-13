@@ -6,6 +6,8 @@ import { count } from "drizzle-orm";
 import { Config } from "../caches/config.cache";
 import { gt } from "drizzle-orm";
 import day from "dayjs";
+import { gte } from "drizzle-orm";
+import { lte } from "drizzle-orm";
 
 export async function removeGuild(guild: string) {
   return db.delete(channels).where(eq(channels.guild, guild));
@@ -61,11 +63,16 @@ export async function saveOrUpdateConfig(guild: string, config: Config) {
     });
 }
 
-export async function saveBet(bet: number, user: string, guild: string) {
+export async function saveBet(
+  bet: number,
+  user: string,
+  guild: string,
+  symbol: string
+) {
   const prevBet = await db
     .select({ value: count() })
     .from(bets)
-    .where(and(gt(bets.date, day().add(-1, "day").toDate())));
+    .where(and(gt(bets.date, day().startOf("day").toDate())));
 
   if (prevBet[0]) {
     await db.update(bets).set({
@@ -78,6 +85,74 @@ export async function saveBet(bet: number, user: string, guild: string) {
     betAmount: bet,
     guild,
     userId: user,
+    symbol,
   });
   return true;
+}
+
+export async function getBetsGroupBySymbol() {
+  const savedBets = await db
+    .select()
+    .from(bets)
+    .where(gte(bets.date, day().add(-1, "day").toDate()));
+
+  return savedBets.reduce((acc, bet) => {
+    if (!acc.has(bet.guild)) {
+      acc.set(bet.guild, new Map());
+    }
+    if (!acc.get(bet.guild)?.has(bet.symbol)) {
+      acc.get(bet.guild)?.set(bet.guild, []);
+    }
+    acc.get(bet.guild)?.get(bet.symbol)?.push({
+      user: bet.userId,
+      bet: bet.betAmount,
+    });
+    return acc;
+  }, new Map<string, Map<string, { user: string; bet: number }[]>>());
+}
+
+export async function updateBetPoints(
+  users: { first: string; second: string; third: string },
+  guild: string,
+  symbol: string
+) {
+  await db
+    .update(bets)
+    .set({
+      points: 5,
+    })
+    .where(
+      and(
+        eq(bets.guild, guild),
+        eq(bets.userId, users.first),
+        eq(bets.symbol, symbol),
+        lte(bets.date, day().add(-1, "day").startOf("day").toDate())
+      )
+    );
+  await db
+    .update(bets)
+    .set({
+      points: 3,
+    })
+    .where(
+      and(
+        eq(bets.guild, guild),
+        eq(bets.userId, users.second),
+        eq(bets.symbol, symbol),
+        lte(bets.date, day().add(-1, "day").startOf("day").toDate())
+      )
+    );
+  await db
+    .update(bets)
+    .set({
+      points: 1,
+    })
+    .where(
+      and(
+        eq(bets.guild, guild),
+        eq(bets.userId, users.third),
+        eq(bets.symbol, symbol),
+        lte(bets.date, day().add(-1, "day").startOf("day").toDate())
+      )
+    );
 }

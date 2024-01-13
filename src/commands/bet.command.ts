@@ -21,7 +21,8 @@ const BetCommand: ICommand<Args> = {
     const insert = await saveBet(
       args.bet,
       message.member.id,
-      message.channel.guildId
+      message.channel.guildId,
+      args.crypto
     );
 
     await message.reply(
