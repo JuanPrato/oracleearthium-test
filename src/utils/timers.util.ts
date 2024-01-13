@@ -7,6 +7,7 @@ import {
   getBetsGroupBySymbol,
   removeChannel,
   removeGuild,
+  updateBetPoints,
 } from "./db.utils";
 import { CronJob } from "cron";
 
@@ -76,7 +77,8 @@ export const updateChannelsValues = async () => {
 };
 
 export function setBetScheduler() {
-  new CronJob("0 1 0 * * *", async function () {
+  new CronJob("0 * * * * *", async function () {
+    console.log("enter");
     const allBets = await getBetsGroupBySymbol();
 
     for (const [guild, guildBets] of allBets) {
@@ -91,6 +93,12 @@ export function setBetScheduler() {
           .sort((f, s) => f.diff - s.diff);
 
         const [first, second, third, ..._] = results;
+
+        await updateBetPoints(
+          { first: first.user, second: second.user, third: third.user },
+          guild,
+          symbol
+        );
       }
     }
   });

@@ -8,6 +8,7 @@ import { gt } from "drizzle-orm";
 import day from "dayjs";
 import { gte } from "drizzle-orm";
 import { lte } from "drizzle-orm";
+import { sum } from "drizzle-orm";
 
 export async function removeGuild(guild: string) {
   return db.delete(channels).where(eq(channels.guild, guild));
@@ -155,4 +156,12 @@ export async function updateBetPoints(
         lte(bets.date, day().add(-1, "day").startOf("day").toDate())
       )
     );
+}
+
+export async function getLeaderBoard(guild: string, crypto?: string) {
+  return db
+    .select({ user: bets.userId, points: sum(bets.points) })
+    .from(bets)
+    .where(eq(bets.guild, guild))
+    .groupBy(bets.guild, bets.userId);
 }
