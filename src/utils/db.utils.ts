@@ -168,11 +168,19 @@ export async function updateBetPoints(
 }
 
 export async function getLeaderBoard(guild: string, crypto?: string) {
-  return db
-    .select({ user: bets.userId, points: sum(bets.points) })
-    .from(bets)
-    .where(eq(bets.guild, guild))
-    .groupBy(bets.guild, bets.userId);
+  if (crypto) {
+    return db
+      .select({ user: bets.userId, points: sum(bets.points) })
+      .from(bets)
+      .where(and(eq(bets.guild, guild), eq(bets.symbol, crypto)))
+      .groupBy(bets.guild, bets.userId);
+  } else {
+    return db
+      .select({ user: bets.userId, points: sum(bets.points) })
+      .from(bets)
+      .where(eq(bets.guild, guild))
+      .groupBy(bets.guild, bets.userId);
+  }
 }
 
 export async function resetGuildBets(guild: string) {

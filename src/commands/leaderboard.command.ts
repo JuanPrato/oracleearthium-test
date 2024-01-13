@@ -11,9 +11,9 @@ type Args = {
 const LeaderBoardCommand: ICommand<Args> = {
   command: "leaderboard",
   async run(message: IAnswerable, args: Args): Promise<void> {
-    const res = await getLeaderBoard(message.member.guild.id);
+    const res = await getLeaderBoard(message.member.guild.id, args.crypto);
     await message.reply(
-      `LeaderBoard
+      `LeaderBoard ${args.crypto ? args.crypto : ""}
       ${res.reduce((acc, v) => {
         return `${acc}
         @<${v.user}>: ${v.points}`;
