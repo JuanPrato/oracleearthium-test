@@ -4,6 +4,7 @@ import { getPriceForSymbols } from "../lib/binance.api";
 import { prices } from "../caches/price.cache";
 import { priceChannels, setNewChannel } from "../caches/price_channel.cache";
 import { saveNewChannel } from "../utils/db.utils";
+import { configMap } from "../caches/config.cache";
 
 client.on(Events.ChannelCreate, async (channel) => {
   if (!channel.guild || !channel.isVoiceBased()) return;
@@ -18,6 +19,17 @@ client.on(Events.ChannelCreate, async (channel) => {
   if (!creator) return;
 
   if (guild.ownerId !== creator.id) return;
+
+  const dsCreator = guild.members.cache.get(creator.id);
+
+  const config = configMap.get(guild.id);
+  if (
+    !config ||
+    !config.adminRoleId ||
+    !dsCreator?.roles.cache.some((role) => role.id === config?.adminRoleId)
+  ) {
+    return;
+  }
 
   const [crypto, ..._] = channel.name.split(":");
 
