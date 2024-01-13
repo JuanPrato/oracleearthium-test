@@ -73,9 +73,14 @@ export async function saveBet(
   const prevBet = await db
     .select({ value: count() })
     .from(bets)
-    .where(and(gt(bets.date, day().startOf("day").toDate())));
-
-  if (prevBet[0]) {
+    .where(
+      and(
+        gt(bets.date, day().startOf("day").toDate()),
+        eq(bets.userId, user),
+        eq(bets.symbol, symbol)
+      )
+    );
+  if (prevBet[0].value !== 0) {
     await db.update(bets).set({
       betAmount: bet,
     });
@@ -95,8 +100,7 @@ export async function getBetsGroupBySymbol() {
   const savedBets = await db
     .select()
     .from(bets)
-    .where(gte(bets.date, day().add(-1, "day").toDate()));
-
+    .where(gte(bets.date, day().add(-1, "day").startOf("day").toDate()));
   return savedBets.reduce((acc, bet) => {
     if (!acc.has(bet.guild)) {
       acc.set(bet.guild, new Map());
