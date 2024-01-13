@@ -174,3 +174,7 @@ export async function getLeaderBoard(guild: string, crypto?: string) {
     .where(eq(bets.guild, guild))
     .groupBy(bets.guild, bets.userId);
 }
+
+export async function resetGuildBets(guild: string) {
+  await db.delete(bets).where(eq(bets.guild, guild));
+}
