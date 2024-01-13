@@ -20,7 +20,7 @@ export const createSlashCommand = (
         c.addMentionableOption((o) =>
           o
             .setName(option.name)
-            .setDescription(option.description || "")
+            .setDescription(option.description || "-")
             .setRequired(option.required || false)
         );
         break;
@@ -28,7 +28,7 @@ export const createSlashCommand = (
         c.addStringOption((o) =>
           o
             .setName(option.name)
-            .setDescription(option.description || "")
+            .setDescription(option.description || "-")
             .setRequired(option.required || false)
         );
         break;
