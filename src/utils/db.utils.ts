@@ -1,9 +1,11 @@
 import { and, eq } from "drizzle-orm";
-import { channels, configs, symbols } from "../db/schema";
+import { bets, channels, configs, symbols } from "../db/schema";
 import { db } from "../app";
 import { prices } from "../caches/price.cache";
 import { count } from "drizzle-orm";
 import { Config } from "../caches/config.cache";
+import { gt } from "drizzle-orm";
+import day from "dayjs";
 
 export async function removeGuild(guild: string) {
   return db.delete(channels).where(eq(channels.guild, guild));
@@ -57,4 +59,25 @@ export async function saveOrUpdateConfig(guild: string, config: Config) {
         adminRole: config.adminRoleId,
       },
     });
+}
+
+export async function saveBet(bet: number, user: string, guild: string) {
+  const prevBet = await db
+    .select({ value: count() })
+    .from(bets)
+    .where(and(gt(bets.date, day().add(-1, "day").toDate())));
+
+  if (prevBet[0]) {
+    await db.update(bets).set({
+      betAmount: bet,
+    });
+    return;
+  }
+
+  await db.insert(bets).values({
+    betAmount: bet,
+    guild,
+    userId: user,
+  });
+  return true;
 }

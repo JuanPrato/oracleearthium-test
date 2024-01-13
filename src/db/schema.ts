@@ -1,3 +1,5 @@
+import { timestamp } from "drizzle-orm/mysql-core";
+import { float } from "drizzle-orm/mysql-core";
 import { int, mysqlTable, primaryKey, varchar } from "drizzle-orm/mysql-core";
 
 export const configs = mysqlTable("configurations", {
@@ -37,4 +39,12 @@ export const channels = mysqlTable(
 export const symbols = mysqlTable("symbols", {
   symbol: varchar("symbol", { length: 10 }).primaryKey(),
   value: varchar("value", { length: 30 }).notNull(),
+});
+
+export const bets = mysqlTable("bets", {
+  id: int("id").primaryKey().autoincrement(),
+  guild: varchar("guild", { length: 20 }).notNull(),
+  userId: varchar("userId", { length: 20 }).notNull(),
+  betAmount: float("bet_amount").notNull(),
+  date: timestamp("date").defaultNow(),
 });
