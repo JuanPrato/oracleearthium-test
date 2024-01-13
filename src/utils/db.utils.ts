@@ -121,19 +121,22 @@ export async function updateBetPoints(
   guild: string,
   symbol: string
 ) {
-  await db
-    .update(bets)
-    .set({
-      points: 5,
-    })
-    .where(
-      and(
-        eq(bets.guild, guild),
-        eq(bets.userId, users.first),
-        eq(bets.symbol, symbol),
-        lte(bets.date, day().add(-1, "day").startOf("day").toDate())
-      )
-    );
+  if (users.first) {
+    await db
+      .update(bets)
+      .set({
+        points: 5,
+      })
+      .where(
+        and(
+          eq(bets.guild, guild),
+          eq(bets.userId, users.first),
+          eq(bets.symbol, symbol),
+          lte(bets.date, day().add(-1, "day").startOf("day").toDate())
+        )
+      );
+  }
+
   if (users.second) {
     await db
       .update(bets)
