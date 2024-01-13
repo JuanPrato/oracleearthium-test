@@ -12,7 +12,6 @@ const LeaderBoardCommand: ICommand<Args> = {
   command: "leaderboard",
   async run(message: IAnswerable, args: Args): Promise<void> {
     const res = await getLeaderBoard(message.member.guild.id);
-    console.log(res);
     await message.reply(
       `LeaderBoard
       ${res.reduce((acc, v) => {
