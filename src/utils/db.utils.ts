@@ -134,32 +134,37 @@ export async function updateBetPoints(
         lte(bets.date, day().add(-1, "day").startOf("day").toDate())
       )
     );
-  await db
-    .update(bets)
-    .set({
-      points: 3,
-    })
-    .where(
-      and(
-        eq(bets.guild, guild),
-        eq(bets.userId, users.second),
-        eq(bets.symbol, symbol),
-        lte(bets.date, day().add(-1, "day").startOf("day").toDate())
-      )
-    );
-  await db
-    .update(bets)
-    .set({
-      points: 1,
-    })
-    .where(
-      and(
-        eq(bets.guild, guild),
-        eq(bets.userId, users.third),
-        eq(bets.symbol, symbol),
-        lte(bets.date, day().add(-1, "day").startOf("day").toDate())
-      )
-    );
+  if (users.second) {
+    await db
+      .update(bets)
+      .set({
+        points: 3,
+      })
+      .where(
+        and(
+          eq(bets.guild, guild),
+          eq(bets.userId, users.second),
+          eq(bets.symbol, symbol),
+          lte(bets.date, day().add(-1, "day").startOf("day").toDate())
+        )
+      );
+  }
+
+  if (users.third) {
+    await db
+      .update(bets)
+      .set({
+        points: 1,
+      })
+      .where(
+        and(
+          eq(bets.guild, guild),
+          eq(bets.userId, users.third),
+          eq(bets.symbol, symbol),
+          lte(bets.date, day().add(-1, "day").startOf("day").toDate())
+        )
+      );
+  }
 }
 
 export async function getLeaderBoard(guild: string, crypto?: string) {

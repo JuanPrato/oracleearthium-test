@@ -93,7 +93,7 @@ export function setBetScheduler() {
 
         const [first, second, third, ..._] = results;
         await updateBetPoints(
-          { first: first.user, second: second.user, third: third.user },
+          { first: first.user, second: second?.user, third: third?.user },
           guild,
           symbol
         );
