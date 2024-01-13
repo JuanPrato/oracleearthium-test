@@ -77,7 +77,7 @@ export const updateChannelsValues = async () => {
 };
 
 export function setBetScheduler() {
-  const job = new CronJob("0 * * * * *", async function () {
+  const job = new CronJob("0 1 0 * * *", async function () {
     const allBets = await getBetsGroupBySymbol();
 
     for (const [guild, guildBets] of allBets) {
