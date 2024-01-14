@@ -44,8 +44,6 @@ FROM base
 # Copy built application
 COPY --from=build /app /app
 
-COPY --from=development /app/public /app/public
-
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
 CMD [ "pnpm", "run", "start" ]

@@ -20,7 +20,6 @@ client
     exit(1);
   });
 
-console.log(path.join(__dirname, "../public"));
 app.use("/", express.static(path.join(__dirname, "../public")));
 
 loadRoutes();
