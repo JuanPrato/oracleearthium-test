@@ -3,7 +3,7 @@ const list = document.getElementById("crypto-list");
 async function getCryptos() {
   list.innerHTML = "";
 
-  const res = await fetch("http://localhost:3000/crypto", { headers: { Content: "application/json" }, method: "GET" })
+  const res = await fetch(`${document.URL}crypto`, { headers: { Content: "application/json" }, method: "GET" })
   const cryptos = await res.json();
 
   for (const [crypto, value] of Object.entries(cryptos)) {

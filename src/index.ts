@@ -6,6 +6,7 @@ import path from "node:path";
 import { app, client } from "./app";
 import { loadRoutes, loadSlashCommands } from "./utils/loaders.util";
 import express from "express";
+import cors from "cors";
 
 client
   .login(process.env.TOKEN)
@@ -20,6 +21,7 @@ client
     exit(1);
   });
 
+app.use(cors());
 app.use("/", express.static(path.join(__dirname, "../public")));
 
 loadRoutes();
