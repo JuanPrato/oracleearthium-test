@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { exit } from "node:process";
+import path from "node:path";
 import { app, client } from "./app";
 import { loadRoutes, loadSlashCommands } from "./utils/loaders.util";
 import express from "express";
@@ -19,7 +20,8 @@ client
     exit(1);
   });
 
-app.use("/", express.static(__dirname + "../public"));
+console.log(path.join(__dirname, "../public"));
+app.use("/", express.static(path.join(__dirname, "../public")));
 
 loadRoutes();
 
