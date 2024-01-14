@@ -3,9 +3,8 @@ dotenv.config();
 
 import { exit } from "node:process";
 import { app, client } from "./app";
-import { loadSlashCommands } from "./utils/loaders.util";
+import { loadRoutes, loadSlashCommands } from "./utils/loaders.util";
 import express from "express";
-import { connect } from "@planetscale/database";
 
 client
   .login(process.env.TOKEN)
@@ -21,6 +20,8 @@ client
   });
 
 app.use("/", express.static(__dirname + "/public"));
+
+loadRoutes();
 
 app.listen(3000, () => {
   console.log("Express ready on port: " + 3000);

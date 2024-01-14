@@ -53,6 +53,4 @@ mysql
       });
   });
 
-loadRoutes();
-
 setBetScheduler();

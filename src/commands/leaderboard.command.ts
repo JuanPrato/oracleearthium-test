@@ -16,7 +16,7 @@ const LeaderBoardCommand: ICommand<Args> = {
       `LeaderBoard ${args.crypto ? args.crypto : ""}
       ${res.reduce((acc, v) => {
         return `${acc}
-        @<${v.user}>: ${v.points}`;
+<@${v.user}>: ${v.points}`;
       }, ``)}
       `
     );
